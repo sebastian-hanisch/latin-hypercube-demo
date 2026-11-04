@@ -97,7 +97,7 @@ def test_seltene_bruecke_gewinn_ab_nq_eins(h):
     strat = {r["N"]: r["f_strat"] for r in ex["rows"]}
     nq = {r["N"]: r["nq"] for r in ex["rows"]}
     assert [nq[n] for n in (10, 30, 100, 300, 1000)] == pytest.approx([0.1, 0.3, 1.0, 3.0, 10.0])
-    assert lhs[10] > 0.8 and lhs[30] > 0.7                                            # N·q unter 1: kein Gewinn (1,36 und 0,96)
+    assert lhs[10] > 0.8 and lhs[30] > 0.7                                            # N·q unter 1: kein Gewinn messbar, Rauschen bei 300 Wiederholungen (1,36 und 0,96; wahr etwa 0,90 und 0,75)
     assert lhs[100] == pytest.approx(0.038, abs=0.03) and lhs[300] == pytest.approx(0.046, abs=0.03) and lhs[1000] == pytest.approx(0.055, abs=0.03)
     assert strat[10] == pytest.approx(0.075, abs=0.05) and strat[30] == pytest.approx(0.043, abs=0.03) and strat[10] < 0.2 < lhs[10]    # Schichtung robuster bei kleinem N
 

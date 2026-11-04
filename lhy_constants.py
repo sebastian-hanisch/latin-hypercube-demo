@@ -43,8 +43,8 @@ PRESETS = {
     "Seltene Brücke, zu wenige Punkte": {"netz": "hantel", "p": 0.99, "n": 30, "seed": DEFAULT_SEED},
 }
 PRESET_HELP = {
-    "Standardfall (Voreinstellung)": "Gitter 3×4, jede Kante hält mit 70 %, 100 Punkte: Latin Hypercube halbiert ungefähr die Varianz.",
+    "Standardfall (Voreinstellung)": "Gitter 3×4, jede Kante hält mit 70 %, 100 Punkte: Latin Hypercube senkt die Varianz etwa auf die Hälfte (Vorhersage 0,53; die einzelne Messung mit 400 Wiederholungen zeigt 0,63).",
     "Eine kritische Brücke": "Zwei Dreiecke, durch eine einzige Brücke verbunden: eine wirksame Eingabe, der Gewinn ist groß, und eine Schichtung nach der Brücke holt das meiste heraus.",
     "Seltener Ausfall im Gitter": "Gitter 3×4 bei p = 0,99: kein Gewinn, der additive Anteil der Varianz ist winzig.",
-    "Seltene Brücke, zu wenige Punkte": "Die Brücke fällt nur mit 1 % aus, bei 30 Punkten gibt es keine Schicht mit Ausfall: der Gewinn erscheint erst ab etwa 100 Punkten.",
+    "Seltene Brücke, zu wenige Punkte": "Die Brücke fällt nur mit 1 % aus; bei 30 Punkten enthält nur die oberste Schicht den Ausfallbereich, und davon nur den Anteil N·q = 0,3: der volle Gewinn erscheint erst ab etwa 100 Punkten.",
 }

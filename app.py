@@ -1,8 +1,8 @@
 """Gleichmäßig abdecken: Schichtung und Latin Hypercube - interaktive Konzept-Demo
 Sebastian Hanisch - Operations Research und Machine Learning
 
-Stück 5 der Linie "Monte-Carlo-Schätzung und Varianzreduktion": Latin Hypercube deckt jede Eingabe für sich gleichmäßig ab und entfernt genau den additiven Anteil der Varianz
-(die Summe der Haupteffekte). Der Gewinn ist exakt vorhersagbar und hängt an der Additivität, nicht an der Zahl der Eingaben. Vehikel ist die Zuverlässigkeit eines
+Stück 5 der Linie "Monte-Carlo-Schätzung und Varianzreduktion": Latin Hypercube deckt jede Eingabe für sich gleichmäßig ab und entfernt für großes N den additiven Anteil der Varianz
+(die Summe der Haupteffekte). Der Gewinn ist vorhersagbar und hängt an der Additivität, nicht an der Zahl der Eingaben. Vehikel ist die Zuverlässigkeit eines
 Gitternetzes (und einer Hantel mit einer kritischen Brücke), die Wahrheit ist exakt aufgezählt.
 
 Lauffähig mit: streamlit run app.py
@@ -82,10 +82,10 @@ with st.container(key="kopf"):
     st.title("🎲 Gleichmäßig abdecken: Schichtung und Latin Hypercube")
 st.markdown(
     """
-**Latin Hypercube** teilt den Wertebereich jeder Eingabe in N gleich große Schichten und zieht aus jeder genau einen Punkt; die Spalten werden unabhängig vertauscht. Er entfernt aus der Varianz **genau den additiven Anteil**, die Summe der Haupteffekte:
-Var ≈ (σ² − Σ Var(E[f | uₑ])) / N. Der Gewinn ist deshalb **exakt vorhersagbar** und hängt **nicht an der Zahl der wichtigen Eingaben, sondern daran, wie additiv die Funktion ist**.
+**Latin Hypercube** teilt den Wertebereich jeder Eingabe in N gleich große Schichten und zieht aus jeder genau einen Punkt; die Spalten werden unabhängig vertauscht. Er entfernt für großes N **den additiven Anteil** der Varianz, die Summe der Haupteffekte:
+Var ≈ (σ² − Σ Var(E[f | uₑ])) / N. Der Gewinn ist deshalb **vorhersagbar** und hängt **nicht an der Zahl der wichtigen Eingaben, sondern daran, wie additiv die Funktion ist**.
 Bei einer kritischen Brücke ist er groß, wo erst das Zusammenspiel der Kanten zählt kaum, und bei seltenen Ausfällen erst, wenn N·q etwa 1 erreicht. Die **Schichtung nach einer einzigen Eingabe** holt den Haupteffekt dieser Eingabe heraus.
-Eine Falle: Der **naive Standardfehler stimmt unter Latin Hypercube nicht** (er ist zu groß, die Intervalle decken zu viel ab).
+Eine Falle: Der **naive Standardfehler stimmt unter Latin Hypercube nicht** (bei der Hantel mit p = 0,9 ist er etwa 1,9-fach zu groß und die Intervalle decken zu viel ab; bei N·q unter 1 kann er auch zu klein sein).
 
 Weiter unten: **🔬 fünf Experimente**, **🧪 Spielwiese**, **🚧 Wo die Annahmen enden** und die Expander **⚠️ Annahmen, Grenzen und bekannte Probleme** und **📐 Mathematische Formulierung**.
 """
@@ -97,8 +97,8 @@ with st.expander("So funktioniert Latin Hypercube", expanded=True):
 1. **Ziehen:** Jede Kante hält unabhängig mit Wahrscheinlichkeit p, das Ziel X ist „das Netz hängt zusammen“. Eine Kante hält, wenn ihre Gleichverteilte uₑ unter p liegt.
 2. **Latin Hypercube:** N Punkte; für jede Kante eine zufällige Reihenfolge der N Schichten [0, 1/N), …, [(N−1)/N, 1), darin je ein gleichverteilter Punkt. Jede Kante fällt dadurch in fast genau (1−p)·N Punkten aus, statt zufällig mehr oder weniger oft.
 3. **Der Gewinn:** Zerlegt man X in einen additiven Teil (Summe der Haupteffekte E[X | uₑ] − E X) und den Rest (Zusammenspiel), nimmt Latin Hypercube den additiven Teil aus der Varianz. Der Faktor gegen einfaches Ziehen ist **1 − (Summe der Haupteffekt-Anteile)**.
-4. **Schichtung nach einer Kante:** Man zieht n = round(N·p) Punkte mit haltender und den Rest mit ausgefallener Kante und gewichtet nach. Der Gewinn ist genau der Anteil dieser einen Kante.
-5. **Standardfehler:** Die Streuung der Auswertungen durch √N überschätzt die Streuung des Mittels unter Latin Hypercube. Zehn unabhängige Latin Hypercubes der Größe N/10 geben ein richtiges Intervall aus der Streuung ihrer Mittel.
+4. **Schichtung nach einer Kante:** Man zieht n = round(N·p) Punkte mit haltender und den Rest mit ausgefallener Kante und gewichtet nach. Der Gewinn ist der Anteil dieser einen Kante, exakt bei ganzzahligem N·p, sonst näherungsweise.
+5. **Standardfehler:** Die Streuung der Auswertungen durch √N überschätzt die Streuung des Mittels unter Latin Hypercube. Zehn unabhängige Latin Hypercubes der Größe N/10 geben ein brauchbares Intervall aus der Streuung ihrer Mittel, wenn jeder Block genug Ausfälle sieht.
         """
     )
 
@@ -265,8 +265,8 @@ st.markdown(
 | Annahme | Was passiert, wenn sie verletzt ist | Wer setzt an |
 |---|---|---|
 | **Das Ziel ist fast additiv in den Eingaben** | Latin Hypercube entfernt nur den additiven Anteil; steckt die Varianz im Zusammenspiel (Gitter bei seltenem Ausfall, Parallel, Mehrheit), bringt er fast nichts (Experimente 2 und 3). | Stück 10 (Sobol-Indizes: welche Eingabe treibt die Varianz) |
-| **Es gibt in jeder Schicht Ereignisse** | Bei seltenen Ausfällen mit N·q unter 1 enthält keine Schicht einen Ausfall; der Gewinn bleibt aus (Experiment 4). | Stück 7 (Importance Sampling) |
-| **Der Standardfehler gilt wie beim einfachen Ziehen** | Unter Latin Hypercube ist er zu groß, das Intervall zu breit; ein richtiges Intervall braucht wiederholte Latin Hypercubes (Experiment 5). | – |
+| **Es gibt in den Schichten Ereignisse** | Bei seltenen Ausfällen mit N·q unter 1 enthält nur die oberste Schicht den Ausfallbereich, und davon nur den Anteil N·q; der Gewinn ist klein und wächst erst ab N·q von etwa 1 voll (Experiment 4). | Stück 7 (Importance Sampling) |
+| **Der Standardfehler gilt wie beim einfachen Ziehen** | Unter Latin Hypercube ist er meist zu groß (bei der Hantel mit p = 0,9 etwa 1,9-fach), das Intervall zu breit; ein brauchbares Intervall braucht wiederholte Latin Hypercubes mit genug Ausfällen je Block (Experiment 5). | – |
 | **Wenige, unabhängige Eingaben** | Latin Hypercube deckt nur die Ränder je Eingabe ab, nicht den Raum; bei vielen Eingaben bleibt die Abdeckung des Raums dünn. | Stück 9 (randomisierte Quasi-Monte-Carlo-Folgen) |
 | **Eine Eingabe schichten** | Die Schichtung nach einer Kante holt nur deren Haupteffekt; mehrdimensionale Schichten wachsen mit der Dimension exponentiell. | – |
 | **Eine Variable erklärt das Ergebnis** | Dann ist die Kontrollvariate (Stück 3) oft besser als das Abdecken. | Stück 3 |
@@ -297,9 +297,9 @@ with st.expander("📐 Mathematische Formulierung"):
 $$\operatorname{Var}\bar f = \frac{\sigma^2 - \sum_e \operatorname{Var} f_e}{N} + o(1/N),\qquad \operatorname{Var} f_e = p(1-p)(a_{1,e} - a_{0,e})^2,$$
 mit $a_{1,e} = \mathbb E[f \mid e \text{ hält}]$ und $a_{0,e} = \mathbb E[f \mid e \text{ fällt aus}]$. Der Faktor gegen einfaches Ziehen ist $1 - \sum_e \operatorname{Var} f_e / \sigma^2$. Für jedes $f$ gilt $\operatorname{Var}\bar f \le \frac{N}{N-1}\cdot\sigma^2/N$.
 
-**Schichtung nach einer Eingabe.** $n_1 = \operatorname{round}(Np)$ Punkte mit $u_e < p$, $N - n_1$ mit $u_e \ge p$, übrige Eingaben unabhängig; $\hat R = p\,\bar f_{\text{hält}} + (1-p)\,\bar f_{\text{fällt aus}}$. Bei $n_1 = Np$ ist die Varianz $\sigma^2(1 - \mathrm{Anteil}_e)/N$.
+**Schichtung nach einer Eingabe.** $n_1 = \operatorname{round}(Np)$ Punkte mit $u_e < p$, $N - n_1$ mit $u_e \ge p$, übrige Eingaben unabhängig; $\hat R = p\,\bar f_{\text{hält}} + (1-p)\,\bar f_{\text{fällt aus}}$. Bei ganzzahligem $n_1 = Np$ ist die Varianz $\sigma^2(1 - \mathrm{Anteil}_e)/N$, sonst ist das eine Näherung.
 
-**Standardfehler.** Der naive Standardfehler $s/\sqrt N$ schätzt $\sqrt{\sigma^2/N}$, nicht $\sqrt{\operatorname{Var}\bar f}$ und ist deshalb unter Latin Hypercube zu groß. Zehn unabhängige Latin Hypercubes der Größe $N/10$ ergeben ein Intervall aus der Streuung ihrer Mittel ($t$-Quantil mit 9 Freiheitsgraden).
+**Standardfehler.** Der naive Standardfehler $s/\sqrt N$ schätzt $\sqrt{\sigma^2/N}$, nicht $\sqrt{\operatorname{Var}\bar f}$ und ist deshalb unter Latin Hypercube meist zu groß (der Faktor ist etwa $\sqrt{1/(1-\text{Anteil der Haupteffekte})}$; bei $N\cdot q<1$ kann er auch zu klein sein). Zehn unabhängige Latin Hypercubes der Größe $N/10$ ergeben ein Intervall aus der Streuung ihrer Mittel ($t$-Quantil mit 9 Freiheitsgraden).
 
 **Wahrheit.** Die Aufzählung aller $2^m$ Kantenmengen liefert $\mu$, $\sigma^2$ und alle Haupteffekte exakt, mit den Gewichten $p^k(1-p)^{m-k}$. Für symmetrische Ziele $f(k)$ genügt die Binomialverteilung.
 

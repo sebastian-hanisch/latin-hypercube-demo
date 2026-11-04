@@ -58,7 +58,7 @@ def test_kernfrage_verdikt_wechselt_mit_dem_preset():
     at.sidebar.button(key="preset_Seltener Ausfall im Gitter").click().run(timeout=TIMEOUT)
     assert "praktisch nichts" in _texte(at)
     at.sidebar.button(key="preset_Seltene Brücke, zu wenige Punkte").click().run(timeout=TIMEOUT)
-    assert "keine Schicht, die einen Ausfall enthält" in _texte(at)
+    assert "nur die oberste Schicht den Ausfallbereich" in _texte(at)
 
 
 def test_jedes_netz_laeuft_durch():

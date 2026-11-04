@@ -1,7 +1,7 @@
 """Kennzahlen, Verdikt-Logik und Experimente über feste Ströme (reine Funktionen, kein Streamlit).
 
 Ziel X = 1, wenn das Netz zusammenhängt; gesucht ist R = E X. Vier Schätzer mit je N Punkten stehen nebeneinander: einfach, Latin Hypercube, Spiegelpaare und Schichtung nach der
-wirksamsten Kante. Der Gewinn des Latin Hypercube ist exakt vorhersagbar: Faktor 1 - (Summe der Haupteffekte) / Var X (asymptotisch); der der Schichtung nach einer Kante 1 - Anteil dieser Kante.
+wirksamsten Kante. Der Gewinn des Latin Hypercube ist für großes N vorhersagbar: Faktor 1 - (Summe der Haupteffekte) / Var X (asymptotisch); der der Schichtung nach einer Kante 1 - Anteil dieser Kante.
 """
 
 from __future__ import annotations
@@ -105,7 +105,7 @@ def verdict_main(a: Analysis, settings: Settings) -> tuple[str, str]:
     if a.nq < 5.0:
         kopf += " Bei so seltenen Ausfällen (N·q unter 5) rauschen die gemessenen Zahlen stark."
     if a.nq < 1.0 and a.add_share > 0.2:
-        return "warning", kopf + f" Mit N·q = {de(a.nq, 1)} gibt es aber keine Schicht, die einen Ausfall enthält: der Gewinn zeigt sich erst bei mehr Punkten (Experiment 4)."
+        return "warning", kopf + f" Mit N·q = {de(a.nq, 1)} enthält aber nur die oberste Schicht den Ausfallbereich, und davon nur den Anteil N·q: der volle Gewinn zeigt sich erst bei mehr Punkten (Experiment 4)."
     if a.add_share < 0.1:
         return "info", kopf + " Der additive Anteil ist winzig: gleichmäßiges Abdecken bringt hier praktisch nichts, die Varianz steckt im Zusammenspiel der Kanten."
     if a.se_ratio > 1.2:
@@ -205,8 +205,8 @@ def verdict_rare(exp: dict) -> tuple[str, str]:
         return "info", "Das Ziel hat keine Streuung, es gibt nichts zu messen."
     first, last = rows[0], rows[-1]
     return "warning", (f"Bei q = {de(exp['q'], 2)} tragen die Haupteffekte {de(exp['add_share'] * 100, 0)} % der Varianz (Vorhersage {de(exp['pred_lhs'], 3)}). Gemessen ist Latin Hypercube bei N = {de(first['N'], 0)} "
-                       f"(N·q = {de(first['nq'], 1)}) bei {dn(first['f_lhs'], 2)}, bei N = {de(last['N'], 0)} (N·q = {de(last['nq'], 0)}) bei {dn(last['f_lhs'], 2)}. Solange N·q unter 1 liegt, hat keine Schicht einen Ausfall, "
-                       f"und der Gewinn bleibt aus oder die Messung rauscht (nur wenige Wiederholungen enthalten überhaupt einen Ausfall).")
+                       f"(N·q = {de(first['nq'], 1)}) bei {dn(first['f_lhs'], 2)}, bei N = {de(last['N'], 0)} (N·q = {de(last['nq'], 0)}) bei {dn(last['f_lhs'], 2)}. Solange N·q unter 1 liegt, enthält nur die oberste Schicht den Ausfallbereich, und davon nur den Anteil N·q; "
+                       f"der Gewinn ist dann klein, und die Messung rauscht stark (nur wenige Wiederholungen enthalten überhaupt einen Ausfall).")
 
 
 # --- Experiment 5: Standardfehler und Intervalle -------------------------------------------------------------------------------------------------
