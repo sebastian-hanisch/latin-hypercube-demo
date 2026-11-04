@@ -1,7 +1,6 @@
 # Gleichmäßig abdecken: Schichtung und Latin Hypercube – Streamlit-Demo
 
-<!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
-**[→ Demo live ausprobieren](https://sebastianhanisch-latin-hypercube-demo.streamlit.app/)** -->
+**[→ Demo live ausprobieren](https://sebastianhanisch-latin-hypercube-demo.streamlit.app/)**
 
 Fünftes Stück der Linie **„Monte-Carlo-Schätzung und Varianzreduktion“** in der „Konzepte“-Reihe für die Website „Sebastian Hanisch – Operations Research und Machine Learning“ (die Linie wird erst vollständig veröffentlicht). Nachfolger von [mehrere-modelle-demo](https://github.com/sebastian-hanisch/mehrere-modelle-demo) (Stück 4), [kontrollvariaten-demo](https://github.com/sebastian-hanisch/kontrollvariaten-demo) (Stück 3) und [gekoppelte-ziehungen-demo](https://github.com/sebastian-hanisch/gekoppelte-ziehungen-demo) (Stück 2, Spiegelpaare als einfachste Schichtung). Hier hebt das Stück die Annahme „die Punkte sind unabhängig gezogen“ auf: Die Punkte decken jede Eingabe **gleichmäßig** ab. Vehikel ist wie in Stück 1 bis 3 die Zuverlässigkeit eines Gitternetzes (Ziel: das Netz hängt zusammen), dazu eine **Hantel** (zwei Dreiecke, durch eine einzige Brücke verbunden). Die Wahrheit ist exakt aufgezählt.
 
@@ -118,4 +117,4 @@ Gebaut mit Streamlit, Plotly, NumPy und fpdf2.
 
 ---
 
-Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zu den Demos: [Interaktive Demos](https://sebastianhanisch.net/demos.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Monte-Carlo-Schätzung: vom Schätzer zur Wahl](https://sebastianhanisch.net/konzepte-monte-carlo.html).
